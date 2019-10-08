@@ -9,7 +9,8 @@ Owned by Home Instead Web Marketing department. Lead contact is Sadia Shoiab.
 Displays how system integrate with internal and external systems.
 
 ![landsscape](Documentation/Readme_images/RosettaStone.PNG)  
+
      
-### Sequence Diagram (WebEnquiry to Sales Force)
+### Sequence Diagram (Web Enquiry to Rosetta stone to Clearcare)
 
 ![sequence](Documentation/Readme_images/RosettaStone_SEQ.PNG) 
