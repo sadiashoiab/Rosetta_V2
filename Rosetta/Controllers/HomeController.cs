@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClearCareOnline.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rosetta.Models;
@@ -17,8 +18,9 @@ namespace Rosetta.Controllers
     // todo: add build and release pipelines
     // todo: add webhook to send email to pitcrew on failure and back for pro-active health notification
 
-    [Route("/")]
+    [Authorize]
     [ApiController]
+    [Route("/")]
     public class HomeController : ControllerBase
     {
         private readonly IRosettaStoneService _rosettaStoneService;
