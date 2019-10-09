@@ -59,8 +59,8 @@ namespace Rosetta
             });
 
             services.AddSwaggerGen(c => {  
-                c.SwaggerDoc("v1", new OpenApiInfo {  
-                    Version = "v1",  
+                c.SwaggerDoc("v2", new OpenApiInfo {  
+                    Version = "v2",  
                     Title = "RosettaStone API",  
                     Description = "RosettaStone ASP.NET Core Web API"  
                 });  
@@ -107,7 +107,7 @@ namespace Rosetta
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RosettaStone API V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "RosettaStone API V2");
             });
         }
     }
