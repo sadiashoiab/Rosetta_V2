@@ -49,15 +49,6 @@ namespace Rosetta
                     ValidAudience = Configuration.GetValue<string>("AzureAd:Audience"),
                     ValidIssuer = $"https://sts.windows.net/{Configuration.GetValue<string>("AzureAd:TenantId")}"
                 };
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = async context =>
-                    {
-                        var claims = context.Principal.Claims.ToList();
-                        await Task.FromResult(0);
-                    }
-                };
             });
 
             // todo: add in application insights
