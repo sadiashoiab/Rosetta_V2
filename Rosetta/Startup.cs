@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
@@ -47,7 +48,17 @@ namespace Rosetta
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidAudience = Configuration.GetValue<string>("AzureAd:Audience"),
-                    ValidIssuer = $"https://sts.windows.net/{Configuration.GetValue<string>("AzureAd:TenantId")}"
+                    ValidIssuer = $"https://sts.windows.net/{Configuration.GetValue<string>("AzureAd:TenantId")}",
+                    ValidateLifetime = true
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var claims = context.Principal.Claims.ToList();
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
