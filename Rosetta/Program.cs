@@ -1,16 +1,31 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Rosetta.Services;
 
 namespace Rosetta
 {
     [ExcludeFromCodeCoverage]
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var webHost = CreateWebHostBuilder(args).Build();
+
+            using (var scope = webHost.Services.CreateScope())
+            {
+                // get a rosettastoneservice instance
+                var rosettaStoneService = scope.ServiceProvider.GetRequiredService<IRosettaStoneService>();
+
+                // warm the cache by calling get agencies before the service starts accepting requests
+                var _ = await rosettaStoneService.GetAgencies();
+            }
+
+            // start accepting requests
+            await webHost.RunAsync();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
