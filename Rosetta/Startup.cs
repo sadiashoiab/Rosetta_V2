@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Polly;
 using Rosetta.ActionFilters;
@@ -30,6 +37,31 @@ namespace Rosetta
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+                .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
+
+            services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, options =>
+            {
+                // Reinitialize the options as this has changed to JwtBearerOptions to pick configuration values for attributes unique to JwtBearerOptions
+                Configuration.Bind("AzureAd", options);
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidAudience = Configuration.GetValue<string>("AzureAd:Audience"),
+                    ValidIssuer = $"https://sts.windows.net/{Configuration.GetValue<string>("AzureAd:TenantId")}",
+                    ValidateLifetime = true
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var claims = context.Principal.Claims.ToList();
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
             // todo: add in application insights
 
             // todo: add application insights collector and publisher
@@ -90,6 +122,9 @@ namespace Rosetta
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
