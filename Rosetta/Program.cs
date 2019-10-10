@@ -4,6 +4,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Rosetta.Services;
 
 namespace Rosetta
@@ -42,6 +44,15 @@ namespace Rosetta
                     //       depending on what OS you are deploying to, this CAN be case sensitive
                     config.AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true);
                     config.AddEnvironmentVariables("APPLICATION_");
+                })
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    builder.AddApplicationInsights(hostingContext.Configuration.GetSection("AI_KEY").Value);
+                    builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Debug);
+                    builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Debug);
+                    builder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    builder.AddConsole();
+                    builder.AddDebug();
                 });
     }
 }
