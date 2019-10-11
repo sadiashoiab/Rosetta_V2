@@ -1,4 +1,3 @@
-
 provider "azuread" {
   version = "~> 0.6"
 }
@@ -79,7 +78,6 @@ resource azurerm_resource_group rosettastone-rg {
   }
 }
 
-
 # create a linux app service plan for rosettastone
 resource azurerm_app_service_plan linux-rosettastone-asp {
   name                = "${var.app_prefix}-${var.app_environment_identifier}-${var.app_root_lower}-plan"
@@ -97,7 +95,6 @@ resource azurerm_app_service_plan linux-rosettastone-asp {
 
   reserved = true # Mandatory for Linux plans
 }
-
 
 resource azuread_application rosettastone_app {
   name                       = "${var.app_prefix}-${var.app_environment_identifier}-${var.app_root_lower}-app"
@@ -138,10 +135,10 @@ resource azurerm_app_service rosettastone-as {
   # require https
   https_only = true
 
-
   site_config {
     always_on = true
   }
+
   # see logs in azure
   logs {
     http_logs {
@@ -160,7 +157,6 @@ resource azurerm_app_service rosettastone-as {
     WEBSITE_HTTPLOGGING_RETENTION_DAYS  = var.retention_in_days
   }
 }
-
 
 # create the key vault
 resource azurerm_key_vault rosettastone-kv {
@@ -204,6 +200,7 @@ resource azurerm_key_vault_secret "ClearCareClientId" {
   value        = "replace_me_once_created"
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
 }
+
 resource azurerm_key_vault_secret "ClearCareClientSecret" {
   name         = "ClearCareClientSecret"
   value        = "replace_me_once_created"
@@ -221,6 +218,7 @@ resource azurerm_key_vault_secret "ClearCarePassword" {
   value        = "replace_me_once_created"
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
 }
+
 resource azurerm_key_vault_secret "CacheExpirationInSec" {
   name         = "CacheExpirationInSec"
   value        = "replace_me_once_created"
@@ -234,5 +232,3 @@ resource azurerm_application_insights rosettastone-ai {
   resource_group_name = var.app_root
   application_type    = "web"
 }
-
-
