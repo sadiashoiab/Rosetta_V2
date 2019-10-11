@@ -11,6 +11,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  solutionPath: 'RosettaStone_V2.sln'
 
 steps:
 
@@ -18,21 +19,21 @@ steps:
   displayName: 'Restoring Packages'
   inputs:
     command: 'restore'
-    projects: '/RosettaStone_V2.sln'
+    projects: '$(solutionPath)'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Solution'
   inputs:
     command: 'build'
-    projects: '/RosettaStone_V2.sln'
+    projects: '$(solutionPath)'
     arguments: '--configuration $(BuildConfiguration) --no-restore'
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Solution'
   inputs:
     command: 'test'
-    projects: '/RosettaStone_V2.sln'
+    projects: '$(solutionPath)'
     arguments: '--configuration $(BuildConfiguration) --no-restore'
 
 - task: DotNetCoreCLI@2
