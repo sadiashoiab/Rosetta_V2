@@ -13,6 +13,8 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
+        "APPLICATION_AI_KEY": "695f3fbe-9604-4336-b2cc-87b331ebbfce",
+        "APPLICATION_KEYVAULTURL": "https://hisc-dev-rosettastonev2.vault.azure.net/secrets/",
         "ASPNETCORE_ENVIRONMENT": "Local"
       }
     },

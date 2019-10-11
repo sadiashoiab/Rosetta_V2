@@ -4,18 +4,14 @@ using ClearCareOnline.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Rosetta.Models;
 using Rosetta.Services;
 
 namespace Rosetta.Controllers
 {
-    // todo: add in application insights
-    // todo: add in logging where it makes sense
-    // todo: create terraform to create app service, keyvault,
-    // todo: update service to leverage keyvault
-    // todo: commit to homeinstead repo, and remove temporary private repo
-    // todo: create azure devops project
-    // todo: add build and release pipelines
+    
+   
     // todo: add webhook to send email to pitcrew on failure and back for pro-active health notification
 
     [Authorize]
@@ -24,10 +20,12 @@ namespace Rosetta.Controllers
     public class HomeController : ControllerBase
     {
         private readonly IRosettaStoneService _rosettaStoneService;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IRosettaStoneService rosettaStoneService)
+        public HomeController(IRosettaStoneService rosettaStoneService, ILogger<HomeController> logger)
         {
             _rosettaStoneService = rosettaStoneService;
+            _logger = logger;
         }
 
         // GET status
@@ -53,6 +51,7 @@ namespace Rosetta.Controllers
                 return Ok(result);
             }
 
+            _logger.LogError($"No ClearCare Agency found for Franchise Number: {franchiseNumber}");
             return NotFound();
         }
 

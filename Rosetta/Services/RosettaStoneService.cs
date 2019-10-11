@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
+using ClearCareOnline.Api.Services;
 using LazyCache;
 using Rosetta.Models;
 
@@ -11,24 +12,37 @@ namespace Rosetta.Services
 {
     public class RosettaStoneService : IRosettaStoneService
     {
-        // todo: pull cache absolute expiration from config/environment/keyvault
-        private const int _absoluteExpirationInSeconds = 12 * 60 * 60; // 12 hours in seconds, this needs to be longer than what it takes to call the factory to retrieve the results
+        private const int _twelveHoursAsSeconds = 12 * 60 * 60;
         private const string _cacheKeyPrefix = "_RosettaStoneService_";
 
         private readonly IAppCache _cache;
         private readonly IMapper<AgencyFranchiseMap> _agencyMapper;
         private readonly IIpAddressCaptureService _ipAddressCaptureService;
+        private readonly IAzureKeyVaultService _azureKeyVaultService;
 
-        public RosettaStoneService(IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService)
+        public RosettaStoneService(IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService, IAzureKeyVaultService azureKeyVaultService)
         {
             _cache = cache;
             _agencyMapper = agencyMapper;
             _ipAddressCaptureService = ipAddressCaptureService;
+            _azureKeyVaultService = azureKeyVaultService;
+        }
+
+        private async Task<int> GetAbsoluteExpiration()
+        {
+            var expiration = await _azureKeyVaultService.GetSecret("CacheExpirationInSec");
+            if (int.TryParse(expiration, out var expirationAsInt))
+            {
+                return expirationAsInt;
+            }
+
+            return _twelveHoursAsSeconds;
         }
 
         private async Task<IList<RosettaAgency>> RetrieveAgencies()
         {
-            var agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, DateTimeOffset.Now.AddSeconds(_absoluteExpirationInSeconds));
+            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
+            var agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, DateTimeOffset.Now.AddSeconds(expiration));
             return agencies
                 .Select(agency => new RosettaAgency
                 {

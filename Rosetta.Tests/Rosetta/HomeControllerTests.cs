@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rosetta.Controllers;
@@ -20,7 +21,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
             var status = new Status(new List<string> {"127.0.0.1"});
 
             rosettaStoneServiceMock.Setup(mock => mock.GetStatus())
@@ -46,7 +48,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
 
             // ACT
             unitUnderTest.ClearCache();
@@ -60,7 +63,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
             var franchiseNumber = 1;
             var expected = new RosettaFranchise
             {
@@ -89,7 +93,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
             var franchiseNumber = 1;
             rosettaStoneServiceMock.Setup(mock => mock.GetFranchise(franchiseNumber))
                 .ReturnsAsync((RosettaFranchise) null)
@@ -110,7 +115,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
             var franchiseNumber = 1;
             var expected = new RosettaFranchise
             {
@@ -139,7 +145,8 @@ namespace Rosetta.Tests.Rosetta
         {
             // ARRANGE
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object);
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
             var franchiseNumber = 1;
             var expected = new RosettaAgency
             {

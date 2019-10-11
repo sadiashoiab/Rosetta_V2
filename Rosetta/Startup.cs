@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
+using ClearCareOnline.Api.Services;
 using HealthChecks.UI.Client;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,10 +64,11 @@ namespace Rosetta
                 };
             });
 
-            // todo: add in application insights
+            var appInsightServiceOptions = new ApplicationInsightsServiceOptions {EnableDebugLogger = true};
+            services.AddApplicationInsightsTelemetry(appInsightServiceOptions);
 
-            // todo: add application insights collector and publisher
             services.AddHealthChecks()
+                .AddApplicationInsightsPublisher()
                 .AddCheck<ClearCareOnlineApiHealthCheck>("ClearCare Online API");
                 //.AddCheck<RandomHealthCheck>("Random Check");
 
@@ -98,6 +101,7 @@ namespace Rosetta
                 });  
             });
 
+            services.AddScoped<IAzureKeyVaultService, AzureKeyVaultService>();
             services.AddScoped<IBearerTokenProvider, BearerTokenProvider>();
             services.AddScoped<IResourceLoader, ResourceLoader>();
             services.AddScoped<IMapper<AgencyFranchiseMap>, AgencyMapper>();

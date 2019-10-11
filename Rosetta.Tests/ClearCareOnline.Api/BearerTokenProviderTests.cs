@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
+using ClearCareOnline.Api.Services;
 using LazyCache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,10 +57,13 @@ namespace Rosetta.Tests.ClearCareOnline.Api
                 .Returns("http://test.url")
                 .Verifiable();
 
+            var keyVaultMock = new Mock<IAzureKeyVaultService>();
+
             var unitUnderTest =
                 new BearerTokenProvider(appCache, 
                     httpClientFactoryMock.Object,
-                    configurationMock.Object);
+                    configurationMock.Object,
+                    keyVaultMock.Object);
 
             // ACT
             var result = await unitUnderTest.RetrieveToken();
@@ -103,10 +107,13 @@ namespace Rosetta.Tests.ClearCareOnline.Api
                 .Returns("http://test.url")
                 .Verifiable();
 
+            var keyVaultMock = new Mock<IAzureKeyVaultService>();
+
             var unitUnderTest =
                 new BearerTokenProvider(appCache, 
                     httpClientFactoryMock.Object,
-                    configurationMock.Object);
+                    configurationMock.Object,
+                    keyVaultMock.Object);
 
             // ACT
             var _ = await unitUnderTest.RetrieveToken();
