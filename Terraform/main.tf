@@ -1,13 +1,13 @@
-terraform {
-  required_version = "~> 0.12.8"
-}
+# terraform {
+#   required_version = "~> 0.12.8"
+# }
 
 provider "azuread" {
   version = "~> 0.6"
 }
 
 provider "azurerm" {
-  version = "~> 1.34"
+  version = "~> 1.35"
 }
 
 provider "external" {
@@ -200,15 +200,35 @@ resource azurerm_key_vault rosettastone-kv {
     certificate_permissions = []
   }
 
-
 }
 
-resource azurerm_key_vault_secret "BearerTokenClientId" {
-  name         = "BearerTokenClientId"
+resource azurerm_key_vault_secret "ClearCareClientId" {
+  name         = "ClearCareClientId"
+  value        = "replace_me_once_created"
+  key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
+}
+resource azurerm_key_vault_secret "ClearCareClientSecret" {
+  name         = "ClearCareClientSecret"
   value        = "replace_me_once_created"
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
 }
 
+resource azurerm_key_vault_secret "ClearCareUsername" {
+  name         = "ClearCareUsername"
+  value        = "replace_me_once_created"
+  key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
+}
+
+resource azurerm_key_vault_secret "ClearCarePassword" {
+  name         = "ClearCarePassword"
+  value        = "replace_me_once_created"
+  key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
+}
+resource azurerm_key_vault_secret "CacheExpirationInSec" {
+  name         = "CacheExpirationInSec"
+  value        = "replace_me_once_created"
+  key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
+}
 
 # create the application insight for rosettastone
 resource azurerm_application_insights rosettastone-ai {
