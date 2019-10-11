@@ -41,7 +41,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '/Rosetta/Rosetta.csproj'
+    projects: 'Rosetta/Rosetta.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --no-restore'
 
 - task: PublishBuildArtifacts@1
