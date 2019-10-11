@@ -10,8 +10,8 @@ using Rosetta.Services;
 
 namespace Rosetta.Controllers
 {
-    // todo: create azure devops project
-    // todo: add build and release pipelines
+    
+   
     // todo: add webhook to send email to pitcrew on failure and back for pro-active health notification
 
     [Authorize]

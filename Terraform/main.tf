@@ -1,6 +1,3 @@
-# terraform {
-#   required_version = "~> 0.12.8"
-# }
 
 provider "azuread" {
   version = "~> 0.6"
@@ -31,12 +28,12 @@ variable "app_root_lower" {
 
 variable "app_environment_identifier" {
   type    = string
-  default = "dev"
+  default = "qa"
 }
 
 variable "aspnet_environment" {
   type    = string
-  default = "Development"
+  default = "Staging"
 }
 
 variable "default_location" {
