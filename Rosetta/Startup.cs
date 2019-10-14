@@ -70,6 +70,7 @@ namespace Rosetta
 
             services.AddHealthChecks()
                 .AddApplicationInsightsPublisher()
+                .AddAzureKeyVault(setup => { setup.UseKeyVaultUrl(Configuration["KeyVaultUrl"]); })
                 .AddCheck<ClearCareOnlineApiHealthCheck>("ClearCare Online API");
                 //.AddCheck<RandomHealthCheck>("Random Check");
 
