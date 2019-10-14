@@ -42,7 +42,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'Rosetta/Rosetta.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --no-restore --self-contained --runtime linux-x64'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publishing Artifacts'
