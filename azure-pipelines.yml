@@ -28,20 +28,21 @@ steps:
     command: 'restore'
     projects: '$(solutionPath)'
     feedsToUse: 'select'
+    arguments: '--runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Solution'
   inputs:
     command: 'build'
     projects: '$(solutionPath)'
-    arguments: '--configuration $(BuildConfiguration) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --no-restore --runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Solution'
   inputs:
     command: 'test'
     projects: '$(solutionPath)'
-    arguments: '--configuration $(BuildConfiguration) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --no-restore --runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Solution'
