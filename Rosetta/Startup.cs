@@ -54,14 +54,15 @@ namespace Rosetta
                     ValidateLifetime = true
                 };
 
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
-                    {
-                        var claims = context.Principal.Claims.ToList();
-                        return Task.CompletedTask;
-                    }
-                };
+                // note: leaving this here for debugging purposes when needed.
+                //options.Events = new JwtBearerEvents
+                //{
+                //    OnTokenValidated = context =>
+                //    {
+                //        var claims = context.Principal.Claims.ToList();
+                //        return Task.CompletedTask;
+                //    }
+                //};
             });
 
             var appInsightServiceOptions = new ApplicationInsightsServiceOptions {EnableDebugLogger = true};
@@ -72,7 +73,8 @@ namespace Rosetta
                 .AddCheck<ClearCareOnlineApiHealthCheck>("ClearCare Online API");
                 //.AddCheck<RandomHealthCheck>("Random Check");
 
-            services.AddHealthChecksUI();
+            // todo: disabling for now as need to get writable volumes working before we can do this here.
+            //services.AddHealthChecksUI();
 
             services.AddLazyCache();
 
@@ -138,7 +140,8 @@ namespace Rosetta
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
 
-                endpoints.MapHealthChecksUI();
+                // todo: disabling for now as need to get writable volumes working before we can do this here.
+                //endpoints.MapHealthChecksUI();
 
                 endpoints.MapControllers();
             });
