@@ -40,8 +40,8 @@ namespace ClearCareOnline.Api
         {
             var clientIdTask = _azureKeyVaultService.GetSecret("ClearCareClientId");
             var clientSecretTask = _azureKeyVaultService.GetSecret("ClearCareClientSecret");
-            var usernameTask = _azureKeyVaultService.GetSecret("ClearCareClientUsername");
-            var passwordTask = _azureKeyVaultService.GetSecret("ClearCareClientPassword");
+            var usernameTask = _azureKeyVaultService.GetSecret("ClearCareUsername");
+            var passwordTask = _azureKeyVaultService.GetSecret("ClearCarePassword");
             await Task.WhenAll(clientIdTask, clientSecretTask, usernameTask, passwordTask);
 
             var clientId = await clientIdTask;
