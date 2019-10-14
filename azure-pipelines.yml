@@ -19,7 +19,8 @@ steps:
   displayName: 'Installing .NET Core 3.0.0 SDK'
   inputs:
     packageType: 'sdk'
-    version: '3.0.0'
+    version: '3.x'
+    includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
   displayName: 'Restoring Packages'
