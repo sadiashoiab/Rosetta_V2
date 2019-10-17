@@ -296,7 +296,7 @@ resource "azurerm_application_gateway" "rosettastonev2-ag" {
 
   backend_address_pool {
     name  = "${azurerm_virtual_network.rosettastonev2-vnet.name}-be-ap"
-    fqdns = ["${azuread_application.rosettastone-as.name}.azurewebsites.net"]
+    fqdns = ["${azurerm_app_service.rosettastone-as.name}.azurewebsites.net"]
   }
 
   backend_http_settings {
