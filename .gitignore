@@ -358,6 +358,10 @@ MigrationBackup/
 *.tfstate
 *.tfstate.*
 
+# secret.tfvar files
+secret.tfvars
+*.secret.tfvars
+
 # Crash log files
 crash.log
 
