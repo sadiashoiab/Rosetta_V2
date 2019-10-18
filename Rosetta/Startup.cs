@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
 using ClearCareOnline.Api.Services;

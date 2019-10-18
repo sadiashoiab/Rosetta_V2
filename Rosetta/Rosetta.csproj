@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <UserSecretsId>3a380b82-2e6f-40fd-9c77-3658950e8c7b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
