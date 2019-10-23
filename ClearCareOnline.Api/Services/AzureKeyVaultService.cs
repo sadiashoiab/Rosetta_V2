@@ -18,9 +18,9 @@ namespace ClearCareOnline.Api.Services
             _logger = logger;
         }
 
-        // todo: look into swapping this out and use the Azure Key Vault Configuration Provider that is in ASP.NET Core, not sure how this works yet.
+        // todo: look into swapping this out and use the Azure Key Vault Configuration Provider that is in ASP.NET Core, not sure how that works yet.
 
-        // todo: this method is not testable due to usage of requiring a valid AzureServiceTokenProvider, refactor later.
+        // todo: this method is not easily testable due to usage of requiring a valid AzureServiceTokenProvider, refactor later.
         public async Task<string> GetSecret(string name)
         {
             try

@@ -15,26 +15,34 @@ variables:
 
 steps:
 
+- task: UseDotNet@2
+  displayName: 'Installing .NET Core 3.0.0 SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '3.x'
+    includePreviewVersions: true
+
 - task: DotNetCoreCLI@2
   displayName: 'Restoring Packages'
   inputs:
     command: 'restore'
     projects: '$(solutionPath)'
     feedsToUse: 'select'
+    arguments: '--runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Solution'
   inputs:
     command: 'build'
     projects: '$(solutionPath)'
-    arguments: '--configuration $(BuildConfiguration) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --no-restore --runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Solution'
   inputs:
     command: 'test'
     projects: '$(solutionPath)'
-    arguments: '--configuration $(BuildConfiguration) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --no-restore --runtime linux-x64'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Solution'
@@ -42,7 +50,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'Rosetta/Rosetta.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --no-restore'
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --no-restore --runtime linux-x64 --self-contained'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publishing Artifacts'
