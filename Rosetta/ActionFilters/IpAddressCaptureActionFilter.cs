@@ -18,17 +18,22 @@ namespace Rosetta.ActionFilters
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            var keys = context.HttpContext.Request.Headers.Keys.ToArray();
-            var allHeaders = new List<string>();
-            foreach (var key in keys)
+            var xForwardForHeader = context.HttpContext.Request.Headers["X-Forwarded-For"];
+            if (!string.IsNullOrWhiteSpace(xForwardForHeader))
             {
-                var value = context.HttpContext.Request.Headers[key];
-                allHeaders.Add($"{key}:{value}");
+                ParseXForwardForAndAdd(xForwardForHeader);
             }
 
-            var headers = string.Join(',', allHeaders);
-            _service.Add(headers);
             _service.Add(context.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+        }
+
+        private void ParseXForwardForAndAdd(string xForwardFor)
+        {
+            var parts = xForwardFor.Split(':');
+            if (parts.Length > 0 && !string.IsNullOrWhiteSpace(parts.First()))
+            {
+                _service.Add(parts.First());
+            }
         }
     }
 }
