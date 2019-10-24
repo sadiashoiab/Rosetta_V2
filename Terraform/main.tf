@@ -89,6 +89,7 @@ resource "azurerm_resource_group" "rosettastone-rg" {
     "App Name"            = var.app_root
     "Assigned Department" = "IT Services"
     "Assigned Company"    = "Home Office"
+	"Environment" = "Production"
   }
 }
 
