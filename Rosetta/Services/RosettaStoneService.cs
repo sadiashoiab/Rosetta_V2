@@ -53,6 +53,25 @@ namespace Rosetta.Services
                 .ToList();
         }
 
+        private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()
+        {
+            var manuallyMappedFranchisesJson = await _azureKeyVaultService.GetSecret("ManuallyMappedFranchisesJson");
+            try
+            {
+                var manuallyMappedFranchises = System.Text.Json.JsonSerializer.Deserialize<List<RosettaFranchise>>(manuallyMappedFranchisesJson);
+                if (manuallyMappedFranchises.Any())
+                {
+                    return manuallyMappedFranchises;
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            return new List<RosettaFranchise>();
+        }
+
         public async Task<Status> GetStatus()
         {
             return await Task.FromResult(new Status(_ipAddressCaptureService.GetAddresses()));
@@ -60,6 +79,13 @@ namespace Rosetta.Services
 
         public async Task<RosettaFranchise> GetFranchise(string franchiseNumber)
         {
+            var manuallyMappedFranchises = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}manually", GetManuallyMappedFranchises);
+            var manuallyMappedResult = manuallyMappedFranchises.FirstOrDefault(agency => agency.franchise_number.Equals(franchiseNumber));
+            if (manuallyMappedResult != null)
+            {
+                return manuallyMappedResult;
+            }
+
             var agencies = await RetrieveAgencies();
             return agencies.Where(agency => agency.franchise_numbers.Contains(franchiseNumber))
                 .Select(match => new RosettaFranchise
@@ -94,7 +120,9 @@ namespace Rosetta.Services
 
         public void ClearCache()
         {
+            _cache.Remove($"{_cacheKeyPrefix}expiration");
             _cache.Remove($"{_cacheKeyPrefix}agencies");
+            _cache.Remove($"{_cacheKeyPrefix}manually");
             _cache.Remove("_BearerTokenProvider_bearerToken");
         }
     }
