@@ -65,11 +65,11 @@ namespace Rosetta.Tests.Rosetta
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
             var loggerMock = new Mock<ILogger<HomeController>>();
             var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
-            var franchiseNumber = 1;
+            var franchiseNumber = "1";
             var expected = new RosettaFranchise
             {
                 clear_care_agency = 222,
-                franchise_number = franchiseNumber.ToString()
+                franchise_number = franchiseNumber
             };
 
             rosettaStoneServiceMock.Setup(mock => mock.GetFranchise(franchiseNumber))
@@ -95,7 +95,7 @@ namespace Rosetta.Tests.Rosetta
             var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
             var loggerMock = new Mock<ILogger<HomeController>>();
             var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
-            var franchiseNumber = 1;
+            var franchiseNumber = "1";
             rosettaStoneServiceMock.Setup(mock => mock.GetFranchise(franchiseNumber))
                 .ReturnsAsync((RosettaFranchise) null)
                 .Verifiable();
