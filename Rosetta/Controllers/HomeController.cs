@@ -43,7 +43,7 @@ namespace Rosetta.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
         [HttpGet("franchise/{franchiseNumber}")]
-        public async Task<ActionResult<RosettaFranchise>> GetFranchise(int franchiseNumber)
+        public async Task<ActionResult<RosettaFranchise>> GetFranchise(string franchiseNumber)
         {
             var result = await _rosettaStoneService.GetFranchise(franchiseNumber);
             if (result != null)

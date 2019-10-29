@@ -179,7 +179,7 @@ namespace Rosetta.Tests.Rosetta
                 .Verifiable();
 
             // ACT
-            var result = await unitUnderTest.GetFranchise(4);
+            var result = await unitUnderTest.GetFranchise("4");
 
             // ASSERT
             agencyMapperMock.Verify();

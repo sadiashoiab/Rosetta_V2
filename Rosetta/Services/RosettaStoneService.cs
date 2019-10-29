@@ -58,14 +58,14 @@ namespace Rosetta.Services
             return await Task.FromResult(new Status(_ipAddressCaptureService.GetAddresses()));
         }
 
-        public async Task<RosettaFranchise> GetFranchise(int franchiseNumber)
+        public async Task<RosettaFranchise> GetFranchise(string franchiseNumber)
         {
             var agencies = await RetrieveAgencies();
-            return agencies.Where(agency => agency.franchise_numbers.Contains(franchiseNumber.ToString()))
+            return agencies.Where(agency => agency.franchise_numbers.Contains(franchiseNumber))
                 .Select(match => new RosettaFranchise
                 {
                     clear_care_agency = match.clear_care_agency, 
-                    franchise_number = franchiseNumber.ToString()
+                    franchise_number = franchiseNumber
                 })
                 .FirstOrDefault();
         }
