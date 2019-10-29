@@ -56,6 +56,7 @@ namespace Rosetta.Services
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()
         {
             var manuallyMappedFranchisesJson = await _azureKeyVaultService.GetSecret("ManuallyMappedFranchisesJson");
+
             try
             {
                 var manuallyMappedFranchises = System.Text.Json.JsonSerializer.Deserialize<List<RosettaFranchise>>(manuallyMappedFranchisesJson);
