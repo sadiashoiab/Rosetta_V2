@@ -18,7 +18,6 @@ namespace Rosetta.Services
             _rosettaStoneService = rosettaStoneService;
         }
 
-
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var absoluteExpirationInSeconds = await _rosettaStoneService.GetAbsoluteExpiration();
