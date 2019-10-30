@@ -105,9 +105,11 @@ namespace Rosetta
             services.AddScoped<IBearerTokenProvider, BearerTokenProvider>();
             services.AddScoped<IResourceLoader, ResourceLoader>();
             services.AddScoped<IMapper<AgencyFranchiseMap>, AgencyMapper>();
-            services.AddScoped<IRosettaStoneService, RosettaStoneService>();
-
+            
+            services.AddSingleton<IRosettaStoneService, RosettaStoneService>();
             services.AddSingleton<IIpAddressCaptureService, IpAddressCaptureService>();
+
+            services.AddHostedService<CacheRefreshService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,5 +11,7 @@ namespace Rosetta.Services
         Task<IList<RosettaFranchise>> GetFranchises();
         Task<IList<RosettaAgency>> GetAgencies();
         void ClearCache();
+        Task RefreshCache();
+        Task<int> GetAbsoluteExpiration();
     }
 }

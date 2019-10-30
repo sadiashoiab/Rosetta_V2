@@ -75,6 +75,7 @@ namespace Rosetta.Tests.Rosetta
             // ARRANGE
             var appCache = (IAppCache) _context.Properties["appCache"];
             appCache.CacheProvider.Remove("_RosettaStoneService_agencies");
+
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
@@ -97,6 +98,8 @@ namespace Rosetta.Tests.Rosetta
             agencyMapperMock.Setup(mock => mock.Map())
                 .ReturnsAsync(mapResults)
                 .Verifiable();
+
+            await unitUnderTest.RefreshCache();
 
             // ACT
             var results = await unitUnderTest.GetAgencies();
@@ -138,6 +141,8 @@ namespace Rosetta.Tests.Rosetta
                 .ReturnsAsync(mapResults)
                 .Verifiable();
 
+            await unitUnderTest.RefreshCache();
+
             // ACT
             var results = await unitUnderTest.GetFranchises();
 
@@ -177,6 +182,8 @@ namespace Rosetta.Tests.Rosetta
             agencyMapperMock.Setup(mock => mock.Map())
                 .ReturnsAsync(mapResults)
                 .Verifiable();
+
+            await unitUnderTest.RefreshCache();
 
             // ACT
             var result = await unitUnderTest.GetFranchise("4");

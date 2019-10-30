@@ -28,7 +28,7 @@ namespace Rosetta.Services
             _azureKeyVaultService = azureKeyVaultService;
         }
 
-        private async Task<int> GetAbsoluteExpiration()
+        public async Task<int> GetAbsoluteExpiration()
         {
             var expiration = await _azureKeyVaultService.GetSecret("CacheExpirationInSec");
             if (int.TryParse(expiration, out var expirationAsInt))
@@ -41,8 +41,8 @@ namespace Rosetta.Services
 
         private async Task<IList<RosettaAgency>> RetrieveAgencies()
         {
-            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
-            var agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, DateTimeOffset.Now.AddSeconds(expiration));
+            var agencies = await _cache.GetAsync<IList<AgencyFranchiseMap>>($"{_cacheKeyPrefix}agencies");
+
             return agencies
                 .Select(agency => new RosettaAgency
                 {
@@ -51,6 +51,14 @@ namespace Rosetta.Services
                 })
                 .OrderBy(franchise => franchise.clear_care_agency)
                 .ToList();
+        }
+
+        public async Task RefreshCache()
+        {
+            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
+            var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
+            var agencies = await _agencyMapper.Map();
+            _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
         }
 
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()
