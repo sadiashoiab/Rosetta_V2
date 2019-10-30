@@ -39,30 +39,9 @@ namespace Rosetta.Services
             return _twelveHoursAsSeconds;
         }
 
-        private async Task<IList<AgencyFranchiseMap>> GetAgencies(int expiration, bool replaceCache = false)
+        private async Task<IList<RosettaAgency>> RetrieveAgencies()
         {
-            var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
-            IList<AgencyFranchiseMap> agencies;
-            
-            // note: i am not of fan of this, however, it gets the job done and allows us to continue so i will leave it until
-            //       time can be taken to determine another solution that doesn't have the drawback this potentially creates
-            if (replaceCache)
-            {
-                agencies = await _agencyMapper.Map();
-                _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
-            }
-            else
-            {
-                agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, absoluteExpirationInSeconds);
-            }
-
-            return agencies;
-        }
-
-        private async Task<IList<RosettaAgency>> RetrieveAgencies(bool replaceCache = false)
-        {
-            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
-            var agencies = await GetAgencies(expiration, replaceCache);
+            var agencies = await _cache.GetAsync<IList<AgencyFranchiseMap>>($"{_cacheKeyPrefix}agencies");
 
             return agencies
                 .Select(agency => new RosettaAgency
@@ -76,7 +55,10 @@ namespace Rosetta.Services
 
         public async Task RefreshCache()
         {
-            await RetrieveAgencies(true);
+            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
+            var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
+            var agencies = await _agencyMapper.Map();
+            _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
         }
 
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()

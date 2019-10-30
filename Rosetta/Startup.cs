@@ -105,8 +105,8 @@ namespace Rosetta
             services.AddScoped<IBearerTokenProvider, BearerTokenProvider>();
             services.AddScoped<IResourceLoader, ResourceLoader>();
             services.AddScoped<IMapper<AgencyFranchiseMap>, AgencyMapper>();
-            services.AddScoped<IRosettaStoneService, RosettaStoneService>();
-
+            
+            services.AddSingleton<IRosettaStoneService, RosettaStoneService>();
             services.AddSingleton<IIpAddressCaptureService, IpAddressCaptureService>();
 
             services.AddHostedService<CacheRefreshService>();
