@@ -23,7 +23,7 @@ namespace Rosetta
                 var rosettaStoneService = scope.ServiceProvider.GetRequiredService<IRosettaStoneService>();
 
                 // warm the cache by calling get agencies before the service starts accepting requests
-                var _ = await rosettaStoneService.GetAgencies();
+                await rosettaStoneService.RefreshCache();
             }
 
             // start accepting requests
@@ -32,10 +32,6 @@ namespace Rosetta
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                // todo: remove this if the port forward works
-                // note: pull the port from config rather than hard code would be ideal, but seeing as we are replacing an existing service
-                //       where existing clients are expecting to hit the port, keeping it here for now.
-                //.UseUrls("https://*:4567")
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {

@@ -28,7 +28,7 @@ namespace Rosetta.Services
             _azureKeyVaultService = azureKeyVaultService;
         }
 
-        private async Task<int> GetAbsoluteExpiration()
+        public async Task<int> GetAbsoluteExpiration()
         {
             var expiration = await _azureKeyVaultService.GetSecret("CacheExpirationInSec");
             if (int.TryParse(expiration, out var expirationAsInt))
@@ -39,10 +39,31 @@ namespace Rosetta.Services
             return _twelveHoursAsSeconds;
         }
 
-        private async Task<IList<RosettaAgency>> RetrieveAgencies()
+        private async Task<IList<AgencyFranchiseMap>> GetAgencies(int expiration, bool replaceCache = false)
+        {
+            var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
+            IList<AgencyFranchiseMap> agencies;
+            
+            // note: i am not of fan of this, however, it gets the job done and allows us to continue so i will leave it until
+            //       time can be taken to determine another solution that doesn't have the drawback this potentially creates
+            if (replaceCache)
+            {
+                agencies = await _agencyMapper.Map();
+                _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
+            }
+            else
+            {
+                agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, absoluteExpirationInSeconds);
+            }
+
+            return agencies;
+        }
+
+        private async Task<IList<RosettaAgency>> RetrieveAgencies(bool replaceCache = false)
         {
             var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
-            var agencies = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}agencies", _agencyMapper.Map, DateTimeOffset.Now.AddSeconds(expiration));
+            var agencies = await GetAgencies(expiration, replaceCache);
+
             return agencies
                 .Select(agency => new RosettaAgency
                 {
@@ -51,6 +72,11 @@ namespace Rosetta.Services
                 })
                 .OrderBy(franchise => franchise.clear_care_agency)
                 .ToList();
+        }
+
+        public async Task RefreshCache()
+        {
+            await RetrieveAgencies(true);
         }
 
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()

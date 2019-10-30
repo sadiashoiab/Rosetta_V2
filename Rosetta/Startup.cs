@@ -108,6 +108,8 @@ namespace Rosetta
             services.AddScoped<IRosettaStoneService, RosettaStoneService>();
 
             services.AddSingleton<IIpAddressCaptureService, IpAddressCaptureService>();
+
+            services.AddHostedService<CacheRefreshService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
