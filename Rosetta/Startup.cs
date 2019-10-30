@@ -101,11 +101,10 @@ namespace Rosetta
                 });  
             });
 
-            services.AddScoped<IAzureKeyVaultService, AzureKeyVaultService>();
-            services.AddScoped<IBearerTokenProvider, BearerTokenProvider>();
-            services.AddScoped<IResourceLoader, ResourceLoader>();
-            services.AddScoped<IMapper<AgencyFranchiseMap>, AgencyMapper>();
-            
+            services.AddSingleton<IAzureKeyVaultService, AzureKeyVaultService>();
+            services.AddSingleton<IBearerTokenProvider, BearerTokenProvider>();
+            services.AddSingleton<IResourceLoader, ResourceLoader>();
+            services.AddSingleton<IMapper<AgencyFranchiseMap>, AgencyMapper>();
             services.AddSingleton<IRosettaStoneService, RosettaStoneService>();
             services.AddSingleton<IIpAddressCaptureService, IpAddressCaptureService>();
 
