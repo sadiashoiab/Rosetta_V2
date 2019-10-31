@@ -10,10 +10,6 @@ using Rosetta.Services;
 
 namespace Rosetta.Controllers
 {
-    
-   
-    // todo: add webhook to send email to pitcrew on failure and back for pro-active health notification
-
     [Authorize]
     [ApiController]
     [Route("/")]
