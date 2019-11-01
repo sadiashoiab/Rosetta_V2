@@ -71,14 +71,14 @@ namespace Rosetta.Controllers
             return Ok(result);
         }
 
-        // note: this is here for debugging/testing purposes
-        // GET franchises
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("clear_cache")]
-        public ActionResult ClearCache()
-        {
-            _rosettaStoneService.ClearCache();
-            return Ok();
-        }
+        //// note: this is here for debugging/testing purposes
+        //// GET franchises
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[HttpGet("clear_cache")]
+        //public ActionResult ClearCache()
+        //{
+        //    _rosettaStoneService.ClearCache();
+        //    return Ok();
+        //}
     }
 }
