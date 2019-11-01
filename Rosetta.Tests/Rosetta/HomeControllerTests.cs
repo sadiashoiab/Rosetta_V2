@@ -43,20 +43,20 @@ namespace Rosetta.Tests.Rosetta
             Assert.AreEqual(status.client_ip_addresses.First(), resultStatus.client_ip_addresses.First());
         }
 
-        [TestMethod] 
-        public void ClearCache_Success()
-        {
-            // ARRANGE
-            var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
-            var loggerMock = new Mock<ILogger<HomeController>>();
-            var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
+        //[TestMethod] 
+        //public void ClearCache_Success()
+        //{
+        //    // ARRANGE
+        //    var rosettaStoneServiceMock = new Mock<IRosettaStoneService>();
+        //    var loggerMock = new Mock<ILogger<HomeController>>();
+        //    var unitUnderTest = new HomeController(rosettaStoneServiceMock.Object, loggerMock.Object);
 
-            // ACT
-            unitUnderTest.ClearCache();
+        //    // ACT
+        //    unitUnderTest.ClearCache();
 
-            // ASSERT
-            rosettaStoneServiceMock.Verify(mock => mock.ClearCache(), Times.Once);
-        }
+        //    // ASSERT
+        //    rosettaStoneServiceMock.Verify(mock => mock.ClearCache(), Times.Once);
+        //}
 
         [TestMethod]
         public async Task GetFranchise_Found_Success()
