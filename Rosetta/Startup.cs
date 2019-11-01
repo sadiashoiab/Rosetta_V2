@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -69,7 +70,13 @@ namespace Rosetta
                 .AddApplicationInsightsPublisher()
                 .AddAzureKeyVault(setup => { setup.UseKeyVaultUrl(Configuration["KeyVaultUrl"]); })
                 .AddCheck<ClearCareOnlineApiHealthCheck>("ClearCare Online API");
-                //.AddCheck<RandomHealthCheck>("Random Check");
+            //.AddCheck<RandomHealthCheck>("Random Check");
+
+            services.Configure<HealthCheckPublisherOptions>(options =>
+            {
+                options.Delay = TimeSpan.FromMinutes(3);
+                options.Period = TimeSpan.FromMinutes(1);
+            });
 
             // todo: disabling for now as need to get writable volumes working before we can do this here.
             //services.AddHealthChecksUI();
@@ -88,17 +95,16 @@ namespace Rosetta
                 .AddTransientHttpErrorPolicy(builder =>
                     builder.WaitAndRetryAsync(2, _ => TimeSpan.FromSeconds(1)));
 
-            services.AddControllers(configure =>
-            {
-                configure.Filters.Add<IpAddressCaptureActionFilter>(); 
-            });
+            services.AddControllers(configure => { configure.Filters.Add<IpAddressCaptureActionFilter>(); });
 
-            services.AddSwaggerGen(c => {  
-                c.SwaggerDoc("v2", new OpenApiInfo {  
-                    Version = "v2",  
-                    Title = "RosettaStone API",  
-                    Description = "RosettaStone ASP.NET Core Web API"  
-                });  
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Version = "v2",
+                    Title = "RosettaStone API",
+                    Description = "RosettaStone ASP.NET Core Web API"
+                });
             });
 
             services.AddSingleton<IAzureKeyVaultService, AzureKeyVaultService>();
