@@ -239,6 +239,12 @@ resource "azurerm_key_vault_secret" "CacheExpirationInSec" {
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
 }
 
+resource "azurerm_key_vault_secret" "CacheExpirationInSec" {
+  name         = "ManuallyMappedFranchisesJson"
+  value        = "[{"franchise_number":"244","clear_care_agency":3465}]"
+  key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
+}
+
 # create the application insight for rosettastone
 resource "azurerm_application_insights" "rosettastone-ai" {
   name                = "hisc-${var.app_environment}-${var.app_name}-ai"
