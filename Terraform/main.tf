@@ -239,7 +239,7 @@ resource "azurerm_key_vault_secret" "CacheExpirationInSec" {
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
 }
 
-resource "azurerm_key_vault_secret" "CacheExpirationInSec" {
+resource "azurerm_key_vault_secret" "ManuallyMappedFranchisesJson" {
   name         = "ManuallyMappedFranchisesJson"
   value        = "[{"franchise_number":"244","clear_care_agency":3465}]"
   key_vault_id = "${azurerm_key_vault.rosettastone-kv.id}"
