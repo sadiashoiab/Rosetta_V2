@@ -13,7 +13,7 @@ This project requires that several secrets exist in the Key Vault for the Azure 
 
 ## ManuallyMappedFranchiseJson
 
-The ManuallyMappedFranchiseJson Secret is just a string. The Azure App Service is expecthing this string to be a JSON array of RosettaFranchise objects. By default the terrafrom will add
+The ManuallyMappedFranchiseJson Secret is just a string. The Azure App Service is expecting the string to be a JSON array of RosettaFranchise objects. By default the terrafrom will add
 
 ```JSON
 [{"franchise_number":"244","clear_care_agency":3465}]
