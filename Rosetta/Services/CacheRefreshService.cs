@@ -25,7 +25,7 @@ namespace Rosetta.Services
 
             if (occurrenceInSeconds > 0)
             {
-                _logger.LogInformation($"OccurrenceInSeconds is set to: {occurrenceInSeconds}, Creating CacheRefeshService timer to refresh the cache");
+                _logger.LogInformation($"OccurrenceInSeconds is set to: {occurrenceInSeconds}, Creating CacheRefreshService timer to refresh the cache");
                 
                 _occurrenceTimer = new Timer(RefreshCache,
                     null,
@@ -34,19 +34,19 @@ namespace Rosetta.Services
             }
             else
             {
-                _logger.LogError($"CacheRefeshService timer will NOT be created.  OccurrenceInSeconds is set to: {occurrenceInSeconds}");
+                _logger.LogError($"CacheRefreshService timer will NOT be created.  OccurrenceInSeconds is set to: {occurrenceInSeconds}");
             }
         }
 
         private async void RefreshCache(object state)
         {
-            _logger.LogInformation("CacheRefeshService is refreshing the cache");
+            _logger.LogInformation("CacheRefreshService is refreshing the cache");
             await _rosettaStoneService.RefreshCache();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogDebug("CacheRefeshService timer is stopping.");
+            _logger.LogDebug("CacheRefreshService timer is stopping.");
             _occurrenceTimer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }

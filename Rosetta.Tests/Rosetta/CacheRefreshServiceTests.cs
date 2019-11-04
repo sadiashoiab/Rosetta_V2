@@ -33,9 +33,16 @@ namespace Rosetta.Tests.Rosetta
             loggerMock.Verify(logger => 
                 logger.Log(LogLevel.Information, 
                     It.IsAny<EventId>(), 
-                    It.IsAny<It.IsAnyType>(), 
+                    It.Is<It.IsAnyType>((v, _) => v.ToString().Equals("OccurrenceInSeconds is set to: 1, Creating CacheRefreshService timer to refresh the cache")), 
                     It.IsAny<Exception>(), 
-                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.AtLeast(2));
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
+
+            loggerMock.Verify(logger => 
+                logger.Log(LogLevel.Information, 
+                    It.IsAny<EventId>(), 
+                    It.Is<It.IsAnyType>((v, _) => v.ToString().Equals("CacheRefreshService is refreshing the cache")), 
+                    It.IsAny<Exception>(), 
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.AtLeastOnce);
 
             uut.Dispose();
         }
@@ -56,12 +63,11 @@ namespace Rosetta.Tests.Rosetta
             await uut.StartAsync(cancellationToken);
 
             // ASSERT
-            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
             rosettaStoneServiceMock.Verify();
             loggerMock.Verify(logger => 
                 logger.Log(LogLevel.Error, 
                     It.IsAny<EventId>(), 
-                    It.IsAny<It.IsAnyType>(), 
+                    It.Is<It.IsAnyType>((v, _) => v.ToString().Equals("CacheRefreshService timer will NOT be created.  OccurrenceInSeconds is set to: 0")), 
                     It.IsAny<Exception>(), 
                     (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
 
@@ -84,7 +90,7 @@ namespace Rosetta.Tests.Rosetta
             loggerMock.Verify(logger => 
                 logger.Log(LogLevel.Debug, 
                     It.IsAny<EventId>(), 
-                    It.IsAny<It.IsAnyType>(), 
+                    It.Is<It.IsAnyType>((v, _) => v.ToString().Equals("CacheRefreshService timer is stopping.")), 
                     It.IsAny<Exception>(), 
                     (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
 
