@@ -58,6 +58,7 @@ namespace Rosetta.Services
             var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
             var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
             var agencies = await _agencyMapper.Map();
+            _cache.Remove($"{_cacheKeyPrefix}agencies");
             _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
         }
 

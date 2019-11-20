@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ClearCareOnline.Api.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace ClearCareOnline.Api
 {
@@ -26,12 +29,14 @@ namespace ClearCareOnline.Api
 
         private async Task<IList<AgencyFranchiseMap>> Transform(IList<AgencyResponse> agencies)
         {
-            // note: the following depending on the number matches could flood the thread pool
-            //       but currently significantly speeds up the processing.
-            var tasks = agencies.Select(TransformAndMapAgency).ToList();
-            var taskResults = await Task.WhenAll(tasks);
+            var transformResults = new List<AgencyFranchiseMap>();
+            foreach (var agency in agencies)
+            {
+                var transformResult = await TransformAndMapAgency(agency);
+                transformResults.Add(transformResult);
+            }
 
-            var results = taskResults.Where(result => result.franchise_numbers.Any()).ToList();
+            var results = transformResults.Where(result => result.franchise_numbers.Any()).ToList();
             return results;
         }
  
