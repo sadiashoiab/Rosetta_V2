@@ -42,6 +42,7 @@ namespace Rosetta.Services
         {
             _logger.LogInformation("CacheRefreshService is refreshing the cache");
             await _rosettaStoneService.RefreshCache();
+            _logger.LogInformation("CacheRefreshService is DONE refreshing the cache");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
