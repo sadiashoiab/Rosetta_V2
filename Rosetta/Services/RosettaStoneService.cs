@@ -6,6 +6,7 @@ using ClearCareOnline.Api;
 using ClearCareOnline.Api.Models;
 using ClearCareOnline.Api.Services;
 using LazyCache;
+using Microsoft.Extensions.Logging;
 using Rosetta.Models;
 
 namespace Rosetta.Services
@@ -15,13 +16,15 @@ namespace Rosetta.Services
         private const int _twelveHoursAsSeconds = 12 * 60 * 60;
         private const string _cacheKeyPrefix = "_RosettaStoneService_";
 
+        private readonly ILogger<RosettaStoneService> _logger;
         private readonly IAppCache _cache;
         private readonly IMapper<AgencyFranchiseMap> _agencyMapper;
         private readonly IIpAddressCaptureService _ipAddressCaptureService;
         private readonly IAzureKeyVaultService _azureKeyVaultService;
 
-        public RosettaStoneService(IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService, IAzureKeyVaultService azureKeyVaultService)
+        public RosettaStoneService(ILogger<RosettaStoneService> logger, IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService, IAzureKeyVaultService azureKeyVaultService)
         {
+            _logger = logger;
             _cache = cache;
             _agencyMapper = agencyMapper;
             _ipAddressCaptureService = ipAddressCaptureService;
@@ -55,11 +58,13 @@ namespace Rosetta.Services
 
         public async Task RefreshCache()
         {
+            _logger.LogInformation("Starting to refresh the cache");
             var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
             var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
             var agencies = await _agencyMapper.Map();
             _cache.Remove($"{_cacheKeyPrefix}agencies");
             _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
+            _logger.LogInformation("Finished refreshing the cache");
         }
 
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()
