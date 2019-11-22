@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using Rosetta.Services;
 
 namespace Rosetta
 {
@@ -15,22 +13,10 @@ namespace Rosetta
     {
         public static async Task Main(string[] args)
         {
-            var webHost = CreateWebHostBuilder(args).Build();
-
-            using (var scope = webHost.Services.CreateScope())
-            {
-                // get a rosettastoneservice instance
-                var rosettaStoneService = scope.ServiceProvider.GetRequiredService<IRosettaStoneService>();
-
-                // warm the cache by calling get agencies before the service starts accepting requests
-                await rosettaStoneService.RefreshCache();
-            }
-
-            // start accepting requests
-            await webHost.RunAsync();
+            await CreateWebHostBuilder(args).Build().RunAsync();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>

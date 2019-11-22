@@ -29,7 +29,7 @@ namespace Rosetta.Services
                 
                 _occurrenceTimer = new Timer(RefreshCache,
                     null,
-                    TimeSpan.FromSeconds(occurrenceInSeconds),
+                    TimeSpan.FromSeconds(10),
                     TimeSpan.FromSeconds(occurrenceInSeconds));
             }
             else
