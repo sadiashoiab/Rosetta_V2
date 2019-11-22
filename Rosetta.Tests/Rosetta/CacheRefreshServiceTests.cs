@@ -27,7 +27,7 @@ namespace Rosetta.Tests.Rosetta
             await uut.StartAsync(cancellationToken);
 
             // ASSERT
-            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
             rosettaStoneServiceMock.Verify();
             rosettaStoneServiceMock.Verify(mock => mock.RefreshCache());
             loggerMock.Verify(logger => 
