@@ -58,7 +58,13 @@ namespace Rosetta.Controllers
         public async Task<ActionResult<IList<AgencyFranchiseMap>>> GetAgencies()
         {
             var result = await _rosettaStoneService.GetAgencies();
-            return Ok(result);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            _logger.LogError("No ClearCare Agencies found");
+            return NotFound();
         }
 
         // GET franchises
@@ -68,7 +74,13 @@ namespace Rosetta.Controllers
         public async Task<ActionResult<IList<RosettaFranchise>>> GetFranchises()
         {
             var result = await _rosettaStoneService.GetFranchises();
-            return Ok(result);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            
+            _logger.LogError("No ClearCare Franchises found");
+            return NotFound();
         }
 
         //// note: this is here for debugging/testing purposes

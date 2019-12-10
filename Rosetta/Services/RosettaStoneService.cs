@@ -46,6 +46,12 @@ namespace Rosetta.Services
         {
             var agencies = await _cache.GetAsync<IList<AgencyFranchiseMap>>($"{_cacheKeyPrefix}agencies");
 
+            // note: if cache is empty, return an empty list
+            if (agencies == null || !agencies.Any())
+            {
+                return new List<RosettaAgency>();
+            }
+
             return agencies
                 .Select(agency => new RosettaAgency
                 {
