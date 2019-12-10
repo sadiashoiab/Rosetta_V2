@@ -16,11 +16,11 @@ variables:
 steps:
 
 - task: UseDotNet@2
-  displayName: 'Installing .NET Core 3.0.0 SDK'
+  displayName: 'Installing .NET Core 3.x SDK'
   inputs:
     packageType: 'sdk'
     version: '3.x'
-    includePreviewVersions: true
+    includePreviewVersions: false
 
 - task: DotNetCoreCLI@2
   displayName: 'Restoring Packages'
