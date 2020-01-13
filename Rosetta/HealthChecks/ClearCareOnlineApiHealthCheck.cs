@@ -10,13 +10,26 @@ namespace Rosetta.HealthChecks
     [ExcludeFromCodeCoverage]
     public class ClearCareOnlineApiHealthCheck : IHealthCheck
     {
+        private const string _apiUrl = "https://api.clearcareonline.com";
+
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
             using var client = new HttpClient();
-            var response = await client.GetAsync("https://api.clearcareonline.com", cancellationToken);  
-            if (!response.StatusCode.Equals(HttpStatusCode.Forbidden))  
-            {  
-                return await Task.FromResult(HealthCheckResult.Unhealthy(description: "https://api.clearcareonline.com not responding with 403 Forbidden as expected."));
+            var responseMessage = await client.GetAsync(_apiUrl, cancellationToken);  
+            if (!responseMessage.StatusCode.Equals(HttpStatusCode.Forbidden))  
+            {
+                var message = $"{_apiUrl} not responding with 403 Forbidden as expected, but responded with StatusCode: {responseMessage.StatusCode}";
+
+                if (responseMessage.Content != null)
+                {
+                    var responseContent = await responseMessage.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrWhiteSpace(responseContent))
+                    {
+                        message += $" Content: {responseContent}";
+                    }
+                }
+
+                return await Task.FromResult(HealthCheckResult.Unhealthy(description: message));
             }  
             return await Task.FromResult(HealthCheckResult.Healthy());
         }

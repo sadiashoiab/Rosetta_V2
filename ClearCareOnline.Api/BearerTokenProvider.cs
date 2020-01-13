@@ -53,7 +53,16 @@ namespace ClearCareOnline.Api
             var responseMessage = await client.HttpPost(_tokenUrl, bodyContent, _noCacheControlHeaderValue);
             if (!responseMessage.IsSuccessStatusCode)
             {
-                throw new HttpRequestException($"Error retrieving bearer token from {_tokenUrl}.");
+                var message = $"Error retrieving bearer token from {_tokenUrl}. StatusCode: {responseMessage.StatusCode}.";
+                if (responseMessage.Content != null)
+                {
+                    var responseContent = await responseMessage.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrWhiteSpace(responseContent))
+                    {
+                        message += $" Content: {responseContent}";
+                    }
+                }
+                throw new HttpRequestException(message);
             }
 
             var json = await responseMessage.Content.ReadAsStringAsync();
