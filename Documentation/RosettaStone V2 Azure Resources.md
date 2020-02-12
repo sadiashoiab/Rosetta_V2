@@ -37,7 +37,7 @@
         2. Select the "Configuration" menu item under "Settings"
         3. Select the "General settings" tab
         4. Change the Stack to ".NET Core"
-        5. Set the Major and Minor version to ".NET Core 3.0"
+        5. Set the Major version to "3.1" and Minor version to "3.1.0" (2020-02-12)
 			1. Couple things to note:
 				1. The .NET Core 3.0 Framework is not a Long Term Support (LTS) version
 				2. .NET Core 3.1, IS a LTS version and our intent is to have the service moved to this as soon as it is available, however that is right now sometime [December 2019](https://dotnet.microsoft.com/platform/support/policy/dotnet-core)
