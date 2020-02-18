@@ -265,3 +265,18 @@ resource "azurerm_storage_account" "rosettastone-storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
+
+resource "azurerm_storage_container" "rosettastone-clearcare-container" {
+  name                  = "clearcare-container"
+  storage_account_name  = azurerm_storage_account.rosettastone-storage.name
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_blob" "agencies-json" {
+  name                   = "agencies.json"
+  storage_account_name   = azurerm_storage_account.rosettastone-storage.name
+  storage_container_name = azurerm_storage_container.rosettastone-clearcare-container.name
+  type                   = "Block"
+  source                 = "agencies.json"
+  content_type           = "application/json"
+}
