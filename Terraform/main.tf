@@ -169,6 +169,7 @@ resource "azurerm_app_service" "rosettastone-as" {
     ASPNETCORE_ENVIRONMENT              = "${var.aspnet_environment}"
     APPLICATION_AI_KEY                  = "${azurerm_application_insights.rosettastone-ai.instrumentation_key}"
     APPLICATION_KEYVAULTURL             = "https://hisc-${var.app_environment}-${var.app_name}-kv.vault.azure.net/secrets/"
+	APPLICATION_STORAGE_CONNECTION      = "${azurerm_storage_account.rosettastone-storage.primary_connection_string}"
     WEBSITE_HTTPLOGGING_RETENTION_DAYS  = var.retention_in_days
   }
 }
