@@ -30,7 +30,7 @@ namespace Rosetta.Services
                 _logger.LogInformation("Loading cache from storage...");
                 await _rosettaStoneService.LoadCacheFromStorage();
                 _logger.LogInformation("Finished loading cache from storage.");
-
+                
                 _occurrenceTimer = new Timer(RefreshCache,
                     null,
                     TimeSpan.FromSeconds(10),
@@ -42,10 +42,14 @@ namespace Rosetta.Services
             }
         }
 
-        private async void RefreshCache(object state)
+        private void RefreshCache(object state)
         {
             _logger.LogInformation("CacheRefreshService is refreshing the cache");
-            await _rosettaStoneService.RefreshCache();
+            Task.Run(async delegate
+                {
+                    await _rosettaStoneService.RefreshCache();
+                });
+            _rosettaStoneService.RefreshCache();
             _logger.LogInformation("CacheRefreshService is DONE refreshing the cache");
         }
 
