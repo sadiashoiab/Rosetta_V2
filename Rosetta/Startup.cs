@@ -71,7 +71,10 @@ namespace Rosetta
             // User should ensure that the given folder already exists
             // and that the application has read/write permissions.
             services.AddSingleton(typeof(ITelemetryChannel), new ServerTelemetryChannel () {StorageFolder = "/tmp/rosettav2"});
-            var appInsightServiceOptions = new ApplicationInsightsServiceOptions {EnableDebugLogger = true};
+            var appInsightServiceOptions = new ApplicationInsightsServiceOptions {
+                EnableDebugLogger = true,
+                EnableAdaptiveSampling = false                
+            };
             services.AddApplicationInsightsTelemetry(appInsightServiceOptions);
 
             services.AddHealthChecks()
