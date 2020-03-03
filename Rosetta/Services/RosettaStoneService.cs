@@ -66,7 +66,7 @@ namespace Rosetta.Services
 
         public async Task LoadCacheFromStorage()
         {
-            _logger.LogInformation("Starting to LoadCacheFromStorage");
+            _logger.LogInformation("LoadCacheFromStorage: Starting to LoadCacheFromStorage");
 
             try 
             {
@@ -76,20 +76,20 @@ namespace Rosetta.Services
                 var agencies = System.Text.Json.JsonSerializer.Deserialize<IList<AgencyFranchiseMap>>(json);
                 if (agencies.Any())
                 {
-                    _logger.LogInformation($"{agencies.Count} agencies were loaded from storage.");
+                    _logger.LogInformation($"LoadCacheFromStorage: {agencies.Count} agencies were loaded from storage.");
                     _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
                 }
                 else
                 {
-                    _logger.LogWarning($"WARNING: No agencies were loaded from storage.");
+                    _logger.LogWarning("LoadCacheFromStorage: WARNING: No agencies were loaded from storage.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"ERROR: Exception thrown when trying to LoadCacheFromStorage.");
+                _logger.LogError(ex, "LoadCacheFromStorage: ERROR: Exception thrown when trying to LoadCacheFromStorage.");
             }           
             
-            _logger.LogInformation("Finished LoadCacheFromStorage");
+            _logger.LogInformation("LoadCacheFromStorage: Finished LoadCacheFromStorage");
         }
 
         private async Task SaveAgenciesToCache(IList<AgencyFranchiseMap> agencies)
@@ -100,22 +100,22 @@ namespace Rosetta.Services
                 {
                     var json = System.Text.Json.JsonSerializer.Serialize(agencies);
                     await _azureStorageBlogCacheService.SendJsonToCache(json);
-                    _logger.LogInformation($"{agencies.Count} agencies were saved to storage.");
+                    _logger.LogInformation($"SaveAgenciesToCache: {agencies.Count} agencies were saved to storage.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"ERROR: Exception thrown when trying to SaveAgenciesToCache.");
+                    _logger.LogError(ex, "SaveAgenciesToCache: ERROR: Exception thrown when trying to SaveAgenciesToCache.");
                 }
             }
             else
             {
-                _logger.LogWarning($"WARNING: No agencies were saved to storage.");
+                _logger.LogWarning("SaveAgenciesToCache: WARNING: No agencies were saved to storage.");
             }
         }
 
         public async Task RefreshCache()
         {
-            _logger.LogInformation("Starting to refresh the cache");
+            _logger.LogInformation("RefreshCache: Starting to refresh the cache");
             try
             {
                 var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
@@ -123,20 +123,20 @@ namespace Rosetta.Services
                 var agencies = await _agencyMapper.Map();
                 if (agencies.Any())
                 {
-                    _logger.LogInformation($"{agencies.Count} agencies were loaded during cache refresh.");
+                    _logger.LogInformation($"RefreshCache: {agencies.Count} agencies were loaded during cache refresh.");
                     _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
                     await SaveAgenciesToCache(agencies);
                 }
                 else
                 {
-                    _logger.LogWarning($"WARNING: No agencies were loaded during cache refresh.");
+                    _logger.LogWarning("RefreshCache: WARNING: No agencies were loaded during cache refresh.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"ERROR: Exception thrown when trying to RefreshCache.");
+                _logger.LogError(ex, "RefreshCache: ERROR: Exception thrown when trying to RefreshCache.");
             }   
-            _logger.LogInformation("Finished refreshing the cache");
+            _logger.LogInformation("RefreshCache: Finished refreshing the cache");
         }
 
         private async Task<IList<RosettaFranchise>> GetManuallyMappedFranchises()
