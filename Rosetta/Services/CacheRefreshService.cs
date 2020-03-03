@@ -49,7 +49,6 @@ namespace Rosetta.Services
                 {
                     await _rosettaStoneService.RefreshCache();
                 });
-            _rosettaStoneService.RefreshCache();
             _logger.LogInformation("CacheRefreshService is DONE refreshing the cache");
         }
 
