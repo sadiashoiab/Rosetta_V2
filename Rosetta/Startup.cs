@@ -5,6 +5,8 @@ using ClearCareOnline.Api.Models;
 using ClearCareOnline.Api.Services;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,6 +65,12 @@ namespace Rosetta
                 //};
             });
 
+            // note: as we are running under linux
+            // The following will configure the channel to use the given folder to temporarily
+            // store telemetry items during network or Application Insights server issues.
+            // User should ensure that the given folder already exists
+            // and that the application has read/write permissions.
+            services.AddSingleton(typeof(ITelemetryChannel), new ServerTelemetryChannel () {StorageFolder = "/tmp/rosettav2"});
             var appInsightServiceOptions = new ApplicationInsightsServiceOptions {EnableDebugLogger = true};
             services.AddApplicationInsightsTelemetry(appInsightServiceOptions);
 
