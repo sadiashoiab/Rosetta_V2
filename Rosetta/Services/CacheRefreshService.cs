@@ -27,6 +27,10 @@ namespace Rosetta.Services
             {
                 _logger.LogInformation($"OccurrenceInSeconds is set to: {occurrenceInSeconds}, Creating CacheRefreshService timer to refresh the cache");
                 
+                _logger.LogInformation("Loading cache from storage...");
+                await _rosettaStoneService.LoadCacheFromStorage();
+                _logger.LogInformation("Finished loading cache from storage.");
+
                 _occurrenceTimer = new Timer(RefreshCache,
                     null,
                     TimeSpan.FromSeconds(10),

@@ -21,14 +21,16 @@ namespace Rosetta.Services
         private readonly IMapper<AgencyFranchiseMap> _agencyMapper;
         private readonly IIpAddressCaptureService _ipAddressCaptureService;
         private readonly IAzureKeyVaultService _azureKeyVaultService;
+        private readonly IAzureStorageBlobCacheService _azureStorageBlogCacheService;
 
-        public RosettaStoneService(ILogger<RosettaStoneService> logger, IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService, IAzureKeyVaultService azureKeyVaultService)
+        public RosettaStoneService(ILogger<RosettaStoneService> logger, IAppCache cache, IMapper<AgencyFranchiseMap> agencyMapper, IIpAddressCaptureService ipAddressCaptureService, IAzureKeyVaultService azureKeyVaultService, IAzureStorageBlobCacheService azureStorageBlogCacheService)
         {
             _logger = logger;
             _cache = cache;
             _agencyMapper = agencyMapper;
             _ipAddressCaptureService = ipAddressCaptureService;
             _azureKeyVaultService = azureKeyVaultService;
+            _azureStorageBlogCacheService = azureStorageBlogCacheService;
         }
 
         public async Task<int> GetAbsoluteExpiration()
@@ -62,14 +64,78 @@ namespace Rosetta.Services
                 .ToList();
         }
 
+        public async Task LoadCacheFromStorage()
+        {
+            _logger.LogInformation("Starting to LoadCacheFromStorage");
+
+            try 
+            {
+                var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
+                var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
+                var json = await _azureStorageBlogCacheService.RetrieveJsonFromCache();
+                var agencies = System.Text.Json.JsonSerializer.Deserialize<IList<AgencyFranchiseMap>>(json);
+                if (agencies.Any())
+                {
+                    _logger.LogInformation($"{agencies.Count} agencies were loaded from storage.");
+                    _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
+                }
+                else
+                {
+                    _logger.LogWarning($"WARNING: No agencies were loaded from storage.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ERROR: Exception thrown when trying to LoadCacheFromStorage.");
+            }           
+            
+            _logger.LogInformation("Finished LoadCacheFromStorage");
+        }
+
+        private async Task SaveAgenciesToCache(IList<AgencyFranchiseMap> agencies)
+        {
+            if (agencies.Any())
+            {
+                try
+                {
+                    var json = System.Text.Json.JsonSerializer.Serialize(agencies);
+                    await _azureStorageBlogCacheService.SendJsonToCache(json);
+                    _logger.LogInformation($"{agencies.Count} agencies were saved to storage.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"ERROR: Exception thrown when trying to SaveAgenciesToCache.");
+                }
+            }
+            else
+            {
+                _logger.LogWarning($"WARNING: No agencies were saved to storage.");
+            }
+        }
+
         public async Task RefreshCache()
         {
             _logger.LogInformation("Starting to refresh the cache");
-            var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
-            var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
-            var agencies = await _agencyMapper.Map();
-            _cache.Remove($"{_cacheKeyPrefix}agencies");
-            _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
+            try
+            {
+                var expiration = await _cache.GetOrAddAsync($"{_cacheKeyPrefix}expiration", GetAbsoluteExpiration);
+                var absoluteExpirationInSeconds = DateTimeOffset.Now.AddSeconds(expiration);
+                var agencies = await _agencyMapper.Map();
+                if (agencies.Any())
+                {
+                    _logger.LogInformation($"{agencies.Count} agencies were loaded during cache refresh.");
+                    _cache.Add($"{_cacheKeyPrefix}agencies", agencies, absoluteExpirationInSeconds);
+                    await SaveAgenciesToCache(agencies);
+                }
+                else
+                {
+                    _logger.LogWarning($"WARNING: No agencies were loaded during cache refresh.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ERROR: Exception thrown when trying to RefreshCache.");
+            }   
             _logger.LogInformation("Finished refreshing the cache");
         }
 

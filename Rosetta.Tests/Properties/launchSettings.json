@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Rosetta.Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "APPLICATION_STORAGE_CONNECTION": "DefaultEndpointsProtocol=https;AccountName=hiscdevrosettav2storage;AccountKey=pRCywlOsHMlzA7jYwt8S9iKrDdLLIlXO466J5JMUtdgml4SQvXdNBIXcvrdbK9BS0kexjlRxzM0TytQ82+GS6Q==;EndpointSuffix=core.windows.net"
+      }
+    }
+  }
+}

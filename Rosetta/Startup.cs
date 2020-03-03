@@ -108,6 +108,7 @@ namespace Rosetta
             });
 
             services.AddSingleton<IAzureKeyVaultService, AzureKeyVaultService>();
+            services.AddSingleton<IAzureStorageBlobCacheService, AzureStorageBlobCacheService>();
             services.AddSingleton<IBearerTokenProvider, BearerTokenProvider>();
             services.AddSingleton<IResourceLoader, ResourceLoader>();
             services.AddSingleton<IMapper<AgencyFranchiseMap>, AgencyMapper>();

@@ -36,7 +36,8 @@ namespace Rosetta.Tests.Rosetta
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
-            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCacheMock.Object, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object);
+            var storageMock = new Mock<IAzureStorageBlobCacheService>();
+            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCacheMock.Object, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object, storageMock.Object);
 
             // ACT
             var result = await unitUnderTest.GetStatus();
@@ -55,7 +56,8 @@ namespace Rosetta.Tests.Rosetta
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
-            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCacheMock.Object, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object);
+            var storageMock = new Mock<IAzureStorageBlobCacheService>();
+            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCacheMock.Object, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object, storageMock.Object);
 
             var sequence = new MockSequence();
             appCacheMock.InSequence(sequence)
@@ -83,7 +85,8 @@ namespace Rosetta.Tests.Rosetta
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
-            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object);
+            var storageMock = new Mock<IAzureStorageBlobCacheService>();
+            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object, storageMock.Object);
 
             var mapResults = new List<AgencyFranchiseMap>
             {
@@ -126,7 +129,8 @@ namespace Rosetta.Tests.Rosetta
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
-            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object);
+            var storageMock = new Mock<IAzureStorageBlobCacheService>();
+            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object, storageMock.Object);
 
             var mapResults = new List<AgencyFranchiseMap>
             {
@@ -169,7 +173,8 @@ namespace Rosetta.Tests.Rosetta
             var agencyMapperMock = new Mock<IMapper<AgencyFranchiseMap>>();
             var ipAddressCaptureServiceMock = new Mock<IIpAddressCaptureService>();
             var keyVaultMock = new Mock<IAzureKeyVaultService>();
-            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object);
+            var storageMock = new Mock<IAzureStorageBlobCacheService>();
+            var unitUnderTest = new RosettaStoneService(loggerMock.Object, appCache, agencyMapperMock.Object, ipAddressCaptureServiceMock.Object, keyVaultMock.Object, storageMock.Object);
 
             var mapResults = new List<AgencyFranchiseMap>
             {

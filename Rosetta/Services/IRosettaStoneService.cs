@@ -13,5 +13,7 @@ namespace Rosetta.Services
         void ClearCache();
         Task RefreshCache();
         Task<int> GetAbsoluteExpiration();
+
+        Task LoadCacheFromStorage();
     }
 }

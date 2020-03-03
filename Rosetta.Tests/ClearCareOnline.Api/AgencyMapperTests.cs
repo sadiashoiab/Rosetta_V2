@@ -10,6 +10,7 @@ using Moq;
 
 namespace Rosetta.Tests.ClearCareOnline.Api
 {
+
     [ExcludeFromCodeCoverage]
     [TestClass]
     public class AgencyMapperTests
