@@ -11,6 +11,7 @@ namespace Rosetta.Services
         private readonly ILogger<CacheRefreshService> _logger;
         private readonly IRosettaStoneService _rosettaStoneService;
         private Timer _occurrenceTimer;
+        private bool disposed = false;
 
         public CacheRefreshService(ILogger<CacheRefreshService> logger, IRosettaStoneService rosettaStoneService)
         {
@@ -59,9 +60,27 @@ namespace Rosetta.Services
             return Task.CompletedTask;
         }
 
+        // Public implementation of Dispose pattern callable by consumers.
         public void Dispose()
         {
-            _occurrenceTimer?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                _occurrenceTimer.Dispose();
+                // Free any other managed objects here.
+                //
+            }
+
+            disposed = true;
         }
     }
 }
