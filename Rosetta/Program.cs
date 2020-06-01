@@ -24,7 +24,7 @@ namespace Rosetta
                     var environment = hostingContext.HostingEnvironment;
                     config.AddJsonFile("appsettings.json", false, true);
                     // note: set ASPNETCORE_ENVIRONMENT environment variable to pull in environment specific configurations.
-                    //shoiab depending on what OS you are deploying to, this CAN be case sensitive
+                    //sfgfhf depending on what OS you are deploying to, this CAN be case sensitive
                     config.AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true);
                     config.AddEnvironmentVariables("APPLICATION_");
                 });
